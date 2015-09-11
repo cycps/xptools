@@ -67,23 +67,54 @@ func ifxZebra(ifx, addr, prefix string) string {
 func (cfg *RouterConfig) GenOspf6Conf() {
 
 	src := "password muffins\n"
+	src += "!\n"
+
+	for _, ifx := range cfg.PeerInterfaces {
+		src += "interface " + ifx + "\n"
+	}
+	for _, ifx := range cfg.DownstreamInterfaces {
+		src += "interface " + ifx + "\n"
+	}
+
+	src += "!\n"
 	src += "router ospf6\n"
 	src += "redistribute static\n"
 	src += "redistribute connected\n"
+	src += "!\n"
 
-	src += "!\n!peer\n!\n"
+	for i, _ := range cfg.PeerInterfaces {
+		area := fmt.Sprintf("0.0.0.%d", i+1)
+		src += "area " + area + " range " + cfg.CoreSubnet + "\n"
+	}
+	for i, _ := range cfg.DownstreamInterfaces {
+		area := fmt.Sprintf("0.0.0.%d", i+len(cfg.PeerInterfaces)+1)
+		src += "area " + area + " range " + cfg.DownstreamSubnet + "\n"
+	}
 	for i, ifx := range cfg.PeerInterfaces {
 		area := fmt.Sprintf("0.0.0.%d", i+1)
-		src += ifxOspf(area, ifx, cfg.CoreSubnet)
-		src += "!\n"
+		src += "interface " + ifx + " area " + area + "\n"
 	}
-
-	src += "!\n!downstream\n!\n"
 	for i, ifx := range cfg.DownstreamInterfaces {
 		area := fmt.Sprintf("0.0.0.%d", i+len(cfg.PeerInterfaces)+1)
-		src += ifxOspf(area, ifx, cfg.DownstreamSubnet)
-		src += "!\n"
+		src += "interface " + ifx + " area " + area + "\n"
 	}
+	src += "!\n"
+
+	/*
+		src += "!\n!peer\n!\n"
+		for i, ifx := range cfg.PeerInterfaces {
+			area := fmt.Sprintf("0.0.0.%d", i+1)
+			src += ifxOspf(area, ifx, cfg.CoreSubnet)
+			src += "!\n"
+		}
+
+		src += "!\n!downstream\n!\n"
+		for i, ifx := range cfg.DownstreamInterfaces {
+			area := fmt.Sprintf("0.0.0.%d", i+len(cfg.PeerInterfaces)+1)
+			src += ifxOspf(area, ifx, cfg.DownstreamSubnet)
+			src += "!\n"
+		}
+	*/
 
 	cfg.Ospf6Conf = src
 
