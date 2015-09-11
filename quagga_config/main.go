@@ -53,14 +53,14 @@ func ifxOspf(area, ifx, subnet string) string {
 	return src
 }
 
-func ifxZebra(ifx, prefix string) string {
+func ifxZebra(ifx, addr, prefix string) string {
 	src := ""
 	src += "interface " + ifx + "\n"
 	src += " link-detect\n"
 	src += " no ipv6 nd suppress-ra\n"
 	src += " ipv6 nd ra-interval 10\n"
-	src += " ipv6 address " + prefix + "/64\n"
-	src += " ipv6 nd prefix " + prefix + "::/64\n"
+	src += " ipv6 address " + addr + "\n"
+	src += " ipv6 nd prefix " + prefix + "\n"
 	return src
 }
 
@@ -96,7 +96,9 @@ func (cfg *RouterConfig) GenZebraConf() {
 
 	src += "!\n!downstream\n!\n"
 	for i, ifx := range cfg.DownstreamInterfaces {
-		src += ifxZebra(ifx, fmt.Sprintf("%s::%d", cfg.BasePrefix, i+1))
+		addr = fmt.Sprintf("%s::%d/64", cfg.BasePrefix, i+1)
+		prefix = fmt.Sprintf("%s::/64", cfg.BasePrefix, i+1)
+		src += ifxZebra(ifx, fmt.Sprintf("%s::%d", addr, prefix, i+1))
 		src += "!\n"
 	}
 
