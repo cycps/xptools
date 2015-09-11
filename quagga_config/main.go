@@ -143,8 +143,8 @@ func (cfg *RouterConfig) GenZebraConf() {
 			src += " ipv6 route " + fmt.Sprintf("%s::%d/64 %s\n", cfg.BasePrefix, i+1, ifx)
 		}
 	*/
-	for i, ifx := range cfg.DownstreamInterfaces {
-		src += " ipv6 route " + fmt.Sprintf("%s::%d/64 %s\n", cfg.BasePrefix, i+1, ifx)
+	for _, ifx := range cfg.DownstreamInterfaces {
+		src += " ipv6 route " + fmt.Sprintf("%s::/64 %s\n", cfg.BasePrefix, ifx)
 	}
 
 	cfg.ZebraConf = src
