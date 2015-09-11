@@ -73,7 +73,7 @@ func (cfg *RouterConfig) GenOspf6Conf() {
 
 	src += "!\n!peer\n!\n"
 	for i, ifx := range cfg.PeerInterfaces {
-		area := fmt.Sprintf("0.0.0.%d", i)
+		area := fmt.Sprintf("0.0.0.%d", i+1)
 		src += ifxOspf(area, ifx, cfg.CoreSubnet)
 		src += "!\n"
 	}
