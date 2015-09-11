@@ -96,9 +96,9 @@ func (cfg *RouterConfig) GenZebraConf() {
 
 	src += "!\n!downstream\n!\n"
 	for i, ifx := range cfg.DownstreamInterfaces {
-		addr = fmt.Sprintf("%s::%d/64", cfg.BasePrefix, i+1)
-		prefix = fmt.Sprintf("%s::/64", cfg.BasePrefix, i+1)
-		src += ifxZebra(ifx, fmt.Sprintf("%s::%d", addr, prefix, i+1))
+		addr := fmt.Sprintf("%s::%d/64", cfg.BasePrefix, i+1)
+		prefix := fmt.Sprintf("%s::/64", cfg.BasePrefix, i+1)
+		src += ifxZebra(ifx, addr, prefix)
 		src += "!\n"
 	}
 
