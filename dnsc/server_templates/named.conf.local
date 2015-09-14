@@ -1,0 +1,11 @@
+zone "{{.Xpname}}.cypress.net" {
+        type master;
+        file "/etc/bind/zones/db.{{.Xpname}}.cypress.net";
+        allow-transfer { 2001:cc::/32; };
+        update-policy {
+                {{range $c := .Clients}}
+                  grant {{$c.FQDN}}. name {{$c.FQDN}}. AAAA TXT;
+                {{end}}
+        };
+};
+

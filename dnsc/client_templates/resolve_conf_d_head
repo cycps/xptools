@@ -1,0 +1,3 @@
+
+search {{.Xpname}}.cypress.net
+nameserver {{.Addr}}
