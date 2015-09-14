@@ -50,10 +50,20 @@ func keys() {
 	applyTemplate("keys.conf", "keys.conf")
 }
 
+func apparmor() {
+	copyFile("usr.sbin.named")
+}
+
 func zoneConf() {
 	applyTemplate(
 		"db.__XPNAME__.cypress.net",
 		fmt.Sprintf("db.%s.cypress.net", rspec.Xpname))
+}
+
+func setupScript() {
+	fn := "setup_dns.sh"
+	applyTemplate(fn, fn)
+	os.Chmod(fn, 0755)
 }
 
 func main() {
@@ -83,5 +93,7 @@ func main() {
 	namedConfOptions()
 	keys()
 	zoneConf()
+	apparmor()
+	setupScript()
 
 }
