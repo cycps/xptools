@@ -19,7 +19,11 @@ func upfile() {
 	dnsc.ApplyTemplate("upfile", "upfile", templateDir, cspec)
 }
 
-func dnskey() {
+func dnsPrivate() {
+	dnsc.ApplyTemplate("dns.private", "dns.private", templateDir, cspec)
+}
+
+func dnsKey() {
 	dnsc.ApplyTemplate("dns.key", "dns.key", templateDir, cspec)
 }
 
@@ -57,7 +61,8 @@ func main() {
 
 	resolveConfHead()
 	upfile()
-	dnskey()
+	dnsPrivate()
+	dnsKey()
 	setupScript()
 	doUpdateScript()
 
