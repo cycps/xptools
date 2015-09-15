@@ -1,6 +1,3 @@
-# This is the muffin that the client launches at the DNS server to make
-# it aware of its ipv6 address
-
 server ns.{{.Xpname}}.cypress.net
 zone {{.Xpname}}.cypress.net
 update delete {{.FQDN}}. AAAA
