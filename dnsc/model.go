@@ -11,3 +11,9 @@ type ClientSpec struct {
 	FQDN string `json:"fqdn"`
 	Key  string `json:"key"`
 }
+
+type XPClientSpec struct {
+	Xpname string `json:"xpname"`
+	NSaddr string `nsaddr:"nsaddr"`
+	ClientSpec
+}

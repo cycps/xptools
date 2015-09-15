@@ -6,63 +6,42 @@ import (
 	"github.com/cycps/xptools/dnsc"
 	"io/ioutil"
 	"os"
-	"text/template"
 )
 
 var templateDir string
 var rspec dnsc.RouterSpec
 
-func copyFile(lfn string) {
-	fn := templateDir + "/" + lfn
-	f, err := ioutil.ReadFile(fn)
-	if err != nil {
-		fmt.Fprintf(os.Stderr,
-			"failed to read %s template (from GOPATH)\n", fn)
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
-	}
-	ioutil.WriteFile(lfn, f, 0644)
-}
-
 func namedConf() {
-	copyFile("named.conf")
-}
-
-func applyTemplate(lfn, ofn string) {
-
-	f, _ := ioutil.ReadFile(templateDir + "/" + lfn)
-	tmpl, _ := template.New(lfn).Parse(string(f))
-	of, _ := os.Create(ofn)
-	tmpl.Execute(of, rspec)
-	of.Close()
-
+	dnsc.CopyFile("named.conf", templateDir)
 }
 
 func namedConfLocal() {
-	applyTemplate("named.conf.local", "named.conf.local")
+	dnsc.ApplyTemplate("named.conf.local", "named.conf.local", templateDir, rspec)
 }
 
 func namedConfOptions() {
-	copyFile("named.conf.options")
+	dnsc.CopyFile("named.conf.options", templateDir)
 }
 
 func keys() {
-	applyTemplate("keys.conf", "keys.conf")
+	dnsc.ApplyTemplate("keys.conf", "keys.conf", templateDir, rspec)
 }
 
 func apparmor() {
-	copyFile("usr.sbin.named")
+	dnsc.CopyFile("usr.sbin.named", templateDir)
 }
 
 func zoneConf() {
-	applyTemplate(
+	dnsc.ApplyTemplate(
 		"db.__XPNAME__.cypress.net",
-		fmt.Sprintf("db.%s.cypress.net", rspec.Xpname))
+		fmt.Sprintf("db.%s.cypress.net", rspec.Xpname),
+		templateDir,
+		rspec)
 }
 
 func setupScript() {
 	fn := "setup_dns.sh"
-	applyTemplate(fn, fn)
+	dnsc.ApplyTemplate(fn, fn, templateDir, rspec)
 	os.Chmod(fn, 0755)
 }
 

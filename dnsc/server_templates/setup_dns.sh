@@ -8,4 +8,5 @@ mkdir -p /etc/bind/zones
 cp db.{{.Xpname}}.cypress.net /etc/bind/zones/
 cp usr.sbin.named /etc/apparmor.d/local/
 
-sudo service bind9 restart
+apparmor_parser -r /etc/apparmor.d/usr.sbin.named
+service bind9 restart
