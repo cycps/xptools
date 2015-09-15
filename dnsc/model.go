@@ -15,5 +15,6 @@ type ClientSpec struct {
 type XPClientSpec struct {
 	Xpname string `json:"xpname"`
 	NSaddr string `nsaddr:"nsaddr"`
+	Addr   string `nsaddr:"addr"`
 	ClientSpec
 }

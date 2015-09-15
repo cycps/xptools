@@ -6,6 +6,8 @@ import (
 	"github.com/cycps/xptools/dnsc"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"regexp"
 )
 
 var cspec dnsc.XPClientSpec
@@ -16,6 +18,13 @@ func resolveConfHead() {
 }
 
 func upfile() {
+
+	out, _ := exec.Command("ip", "route", "get", cspec.NSaddr).Output()
+
+	rx, _ := regexp.Compile("src\\s+(\\S+)")
+	m := rx.FindStringSubmatch(string(out))
+	cspec.Addr = m[len(m)-1]
+
 	dnsc.ApplyTemplate("upfile", "upfile", templateDir, cspec)
 }
 
