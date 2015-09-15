@@ -5,6 +5,7 @@ cp named.conf.local /etc/bind
 cp named.conf.options /etc/bind
 cp keys.conf /etc/bind
 mkdir -p /var/cache/bind/zones
+chown bind:bind /var/cache/bind
 cp db.{{.Xpname}}.cypress.net /var/cache/bind/zones
 cp usr.sbin.named /etc/apparmor.d/local/
 
