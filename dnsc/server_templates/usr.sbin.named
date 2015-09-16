@@ -1,5 +1,2 @@
-# This file goes in /etc/apparmor.d/local/user.sbin.named
-
 /etc/bind/zones/** rw,
 /etc/bind/zones/ rw,
-

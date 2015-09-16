@@ -1,6 +1,6 @@
 package dnsc
 
-type RouterSpec struct {
+type ServerSpec struct {
 	Xpname  string       `json:"xpname"`
 	FQDN    string       `json:"fqdn"`
 	Addr    string       `json:"addr"`

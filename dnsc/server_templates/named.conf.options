@@ -1,5 +1,5 @@
 acl "trusted" {
-        2001:cc::/32; # yeah that is probably insecure ...
+        2001:cc::/32;
 };      
 
 options {
@@ -7,6 +7,7 @@ options {
         recursion yes;
         allow-recursion { trusted; };
         allow-query { trusted; };
+        allow-query-cache { trusted; };
         forwarders {
                 192.168.252.1;
         };
