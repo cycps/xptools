@@ -9,7 +9,7 @@ import (
 func main() {
 
 	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "usage: keygen <dns name>")
+		fmt.Fprintf(os.Stderr, "usage: keygen <dns name>\n")
 		os.Exit(1)
 	}
 
