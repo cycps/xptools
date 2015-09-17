@@ -19,5 +19,5 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 
-	fmt.Printf("key: %s", key)
+	fmt.Printf("key: %s\n", key)
 }
