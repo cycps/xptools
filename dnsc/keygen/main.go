@@ -13,9 +13,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	err := dnsc.Keygen(os.Args[1])
+	key, err := dnsc.Keygen(os.Args[1])
 	if err != nil {
 		fmt.Fprint(os.Stderr, "error executing dnssec-keygen\n")
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
+
+	fmt.Printf("key: %s", key)
 }
