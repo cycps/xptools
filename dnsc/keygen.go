@@ -15,6 +15,6 @@ func Keygen(dnsname string) error {
 		return err
 	}
 
-	exec.Command("rm", "K"+dnsname+"*").Run()
+	exec.Command("bash", "-c", "rm K"+dnsname+"*").Run()
 	return nil
 }
