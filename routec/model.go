@@ -1,4 +1,4 @@
-package main
+package routec
 
 import (
 	"encoding/binary"
@@ -7,31 +7,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
-	"os"
 	"os/exec"
 	"regexp"
 )
-
-func main() {
-
-	fmt.Printf("quagga_config v0.1\n\n")
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "usage: quagga_config <neighbors json>\n")
-		os.Exit(1)
-	}
-
-	chart := readRouterChart(os.Args[1])
-	cfg := initRouterConfig(&chart)
-
-	resolveInterfaceInfo(&cfg, &chart)
-
-	cfg.GenOspf6Conf()
-	ioutil.WriteFile("ospf6d.conf", []byte(cfg.Ospf6Conf), 0644)
-
-	cfg.GenZebraConf()
-	ioutil.WriteFile("zebra.conf", []byte(cfg.ZebraConf), 0644)
-
-}
 
 //In toplogy (mathematical) a local topology is called a chart
 type RouterChart struct {
@@ -43,25 +21,6 @@ type RouterConfig struct {
 	BasePrefix, BaseAddr, CoreSubnet, DownstreamSubnet string
 	DownstreamInterfaces, PeerInterfaces               []string
 	Ospf6Conf, ZebraConf                               string
-}
-
-func ifxOspf(area, ifx, subnet string) string {
-	src := ""
-	src += "interface " + ifx + "\n"
-	src += "area " + area + " range " + subnet + "\n"
-	src += "interface " + ifx + " area " + area + "\n"
-	return src
-}
-
-func ifxZebra(ifx, addr, prefix string) string {
-	src := ""
-	src += "interface " + ifx + "\n"
-	src += " link-detect\n"
-	src += " no ipv6 nd suppress-ra\n"
-	src += " ipv6 nd ra-interval 10\n"
-	src += " ipv6 address " + addr + "\n"
-	src += " ipv6 nd prefix " + prefix + "\n"
-	return src
 }
 
 func (cfg *RouterConfig) GenOspf6Conf() {
@@ -151,7 +110,26 @@ func (cfg *RouterConfig) GenZebraConf() {
 
 }
 
-func readRouterChart(filename string) RouterChart {
+func ifxOspf(area, ifx, subnet string) string {
+	src := ""
+	src += "interface " + ifx + "\n"
+	src += "area " + area + " range " + subnet + "\n"
+	src += "interface " + ifx + " area " + area + "\n"
+	return src
+}
+
+func ifxZebra(ifx, addr, prefix string) string {
+	src := ""
+	src += "interface " + ifx + "\n"
+	src += " link-detect\n"
+	src += " no ipv6 nd suppress-ra\n"
+	src += " ipv6 nd ra-interval 10\n"
+	src += " ipv6 address " + addr + "\n"
+	src += " ipv6 nd prefix " + prefix + "\n"
+	return src
+}
+
+func ReadRouterChart(filename string) RouterChart {
 
 	src, _ := ioutil.ReadFile(filename)
 
@@ -184,7 +162,7 @@ func uint32ToHexPrefix(x uint32) string {
 	return _s
 }
 
-func initRouterConfig(ec *RouterChart) RouterConfig {
+func InitRouterConfig(ec *RouterChart) RouterConfig {
 
 	rc := RouterConfig{}
 	rc.CoreSubnet = "2001:cc::/32"
@@ -200,7 +178,8 @@ func initRouterConfig(ec *RouterChart) RouterConfig {
 
 }
 
-func resolveInterfaceInfo(cfg *RouterConfig, chart *RouterChart) {
+func ResolveInterfaceInfo(cfg *RouterConfig,
+	chart *RouterChart) {
 
 	fmt.Println("downstream")
 	for _, x := range chart.DownstreamHosts {
