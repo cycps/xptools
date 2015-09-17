@@ -14,5 +14,7 @@ func Keygen(dnsname string) error {
 	if err != nil {
 		return err
 	}
+
+	exec.Command("rm", "K"+dnsname+"*").Run()
 	return nil
 }
